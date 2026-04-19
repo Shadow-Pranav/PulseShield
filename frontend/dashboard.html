@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseShield Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="dashboard">
+  <div class="mesh mesh-one"></div>
+  <div class="mesh mesh-two"></div>
+  <div class="noise-layer"></div>
+
+  <nav class="navbar app-nav px-3 px-lg-4 py-3">
+    <div class="container-xxl">
+      <a class="navbar-brand brand-mark" href="./index.html">
+        <span class="brand-dot"></span>
+        PulseShield
+      </a>
+      <div class="nav-actions">
+        <div class="pill-inline">
+          <span>SOCKETS ON</span>
+          <span>MYSQL LOGGED</span>
+          <span>EXPORT READY</span>
+        </div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb"></span>
+          </span>
+        </button>
+        <a href="./index.html" class="btn app-btn ghost-btn">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container-xxl pb-5">
+    <section class="dashboard-hero glass-panel reveal-up">
+      <div class="dashboard-copy">
+        <span class="eyebrow">Operations dashboard</span>
+        <h1>Fraud analytics, but make it feel alive.</h1>
+        <p>Track the tempo of suspicious activity, refresh instantly, export evidence, and filter cases without losing the glassy flow.</p>
+      </div>
+      <div class="dashboard-actions">
+        <button id="refreshDashboard" class="btn app-btn glass-btn" type="button">Refresh Feed</button>
+        <button id="exportCsv" class="btn app-btn primary-btn" type="button">Export CSV</button>
+      </div>
+    </section>
+
+    <section class="metric-grid reveal-up stagger-1">
+      <article class="glass-panel metric-tile neon-outline">
+        <span>Total transactions</span>
+        <strong id="totalTransactions">0</strong>
+      </article>
+      <article class="glass-panel metric-tile">
+        <span>Fraud detected</span>
+        <strong id="fraudTransactions">0</strong>
+      </article>
+      <article class="glass-panel metric-tile">
+        <span>Legit transactions</span>
+        <strong id="legitTransactions">0</strong>
+      </article>
+      <article class="glass-panel metric-tile">
+        <span>Average risk</span>
+        <strong id="avgProbability">0%</strong>
+      </article>
+    </section>
+
+    <section class="dashboard-main reveal-up stagger-2">
+      <div class="dashboard-left">
+        <section class="glass-panel section-card chart-shell">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Risk graph</span>
+              <h2>Probability drift</h2>
+            </div>
+            <div id="dashboardRiskPill" class="risk-pill safe-state">Low Risk</div>
+          </div>
+          <div class="chart-frame">
+            <canvas id="transactionsChart"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <aside class="dashboard-right">
+        <section class="glass-panel section-card indicator-card">
+          <span class="eyebrow">Live layer</span>
+          <h2>Analyst pulse</h2>
+          <div class="pulse-bars compact" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p>As new predictions land, this dashboard refreshes and keeps your case stream current.</p>
+        </section>
+      </aside>
+    </section>
+
+    <section class="glass-panel section-card mt-4 reveal-up stagger-3">
+      <div class="section-heading flex-wrap gap-3">
+        <div>
+          <span class="eyebrow">History</span>
+          <h2>Stored transaction records</h2>
+        </div>
+        <label class="filter-pill">
+          <input id="fraudOnlyFilter" type="checkbox">
+          <span>Show only fraud cases</span>
+        </label>
+      </div>
+      <div class="table-responsive mt-3">
+        <table class="table transaction-table align-middle">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Amount</th>
+              <th>Location</th>
+              <th>Device</th>
+              <th>Time</th>
+              <th>Probability</th>
+              <th>Prediction</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="toastContainer" class="toast-stack"></div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
