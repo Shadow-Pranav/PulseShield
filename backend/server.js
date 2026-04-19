@@ -56,14 +56,13 @@ async function startServer() {
   try {
     await initializeDatabase();
     console.log("MySQL database connected");
+    server.listen(PORT, () => {
+      console.log(`Server running at http://localhost:${PORT}`);
+    });
   } catch (error) {
-    console.error("Database initialization warning:", error.message);
-    console.log("Continuing without database... (fallback mode)");
+    console.error("Database initialization failed:", error.message);
+    process.exit(1);
   }
-
-  server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-  });
 }
 
 startServer();
