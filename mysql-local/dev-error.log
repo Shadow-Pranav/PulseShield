@@ -102,3 +102,12 @@
 2026-04-19T15:04:56.708170Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
 2026-04-19T15:04:56.708407Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
 2026-04-19T15:04:56.729479Z 0 [System] [MY-010931] [Server] D:\E_Commerce\mysql-local\mysql-8.4.8-winx64\bin\mysqld.exe: ready for connections. Version: '8.4.8'  socket: ''  port: 3307  MySQL Community Server - GPL.
+2026-04-19T15:21:26.913648Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-04-19T15:21:27.100632Z 0 [System] [MY-010116] [Server] D:\E_Commerce\mysql-local\mysql-8.4.8-winx64\bin\mysqld.exe (mysqld 8.4.8) starting as process 20860
+2026-04-19T15:21:27.129473Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-04-19T15:21:27.586942Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-04-19T15:21:27.694656Z 0 [System] [MY-010229] [Server] Starting XA crash recovery...
+2026-04-19T15:21:27.698037Z 0 [System] [MY-010232] [Server] XA crash recovery finished.
+2026-04-19T15:21:27.821708Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-04-19T15:21:27.822072Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-04-19T15:21:27.845283Z 0 [System] [MY-010931] [Server] D:\E_Commerce\mysql-local\mysql-8.4.8-winx64\bin\mysqld.exe: ready for connections. Version: '8.4.8'  socket: ''  port: 3307  MySQL Community Server - GPL.
