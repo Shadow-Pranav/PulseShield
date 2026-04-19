@@ -55,15 +55,15 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
   try {
     await initializeDatabase();
-
-    server.listen(PORT, () => {
-      console.log(`Server running at http://localhost:${PORT}`);
-      console.log("MySQL database connected");
-    });
+    console.log("MySQL database connected");
   } catch (error) {
-    console.error("Failed to start backend:", error.message);
-    process.exit(1);
+    console.error("Database initialization warning:", error.message);
+    console.log("Continuing without database... (fallback mode)");
   }
+
+  server.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
 }
 
 startServer();
