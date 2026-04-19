@@ -72,13 +72,9 @@ function setupPredictionForm() {
     toggleLoadingState(true, predictButton, buttonText, loader);
 
     try {
-      const token = localStorage.getItem("pulse-token");
       const response = await fetch(`${API_BASE_URL}/transactions/predict`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {})
-        },
+        headers: createJsonHeaders(),
         body: JSON.stringify(payload)
       });
 
@@ -141,9 +137,7 @@ function setupAuthForm() {
     try {
       const response = await fetch(`${API_BASE_URL}/auth/${mode}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: createJsonHeaders(false),
         body: JSON.stringify(payload)
       });
 
@@ -236,7 +230,9 @@ async function loadRecentTransactions() {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/transactions?limit=5`);
+    const response = await fetch(`${API_BASE_URL}/transactions?limit=5`, {
+      headers: createAuthHeaders()
+    });
     const data = await response.json();
 
     if (!response.ok) {
@@ -270,7 +266,14 @@ function setupDashboard() {
   document.getElementById("refreshDashboard")?.addEventListener("click", loadDashboardData);
   document.getElementById("fraudOnlyFilter")?.addEventListener("change", loadDashboardData);
   document.getElementById("exportCsv")?.addEventListener("click", () => {
-    window.open(`${API_BASE_URL}/transactions/export/csv`, "_blank");
+    const token = localStorage.getItem("pulse-token");
+
+    if (!token) {
+      showToast("Login first before exporting CSV history.", "danger");
+      return;
+    }
+
+    window.open(`${API_BASE_URL}/transactions/export/csv?token=${encodeURIComponent(token)}`, "_blank");
   });
 
   if (window.io) {
@@ -287,8 +290,8 @@ async function loadDashboardData() {
 
   try {
     const [statsResponse, transactionsResponse] = await Promise.all([
-      fetch(`${API_BASE_URL}/transactions/stats/summary`),
-      fetch(`${API_BASE_URL}/transactions?fraudOnly=${Boolean(fraudOnly)}`)
+      fetch(`${API_BASE_URL}/transactions/stats/summary`, { headers: createAuthHeaders() }),
+      fetch(`${API_BASE_URL}/transactions?fraudOnly=${Boolean(fraudOnly)}`, { headers: createAuthHeaders() })
     ]);
 
     const stats = await statsResponse.json();
@@ -423,6 +426,36 @@ function showToast(message, tone = "safe") {
   window.setTimeout(() => {
     toast.remove();
   }, 3200);
+}
+
+function createAuthHeaders(includeJson = false) {
+  const headers = {};
+  const token = localStorage.getItem("pulse-token");
+
+  if (includeJson) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  return headers;
+}
+
+function createJsonHeaders(includeAuth = true) {
+  const headers = {
+    "Content-Type": "application/json"
+  };
+
+  if (!includeAuth) {
+    return headers;
+  }
+
+  return {
+    ...headers,
+    ...createAuthHeaders()
+  };
 }
 
 function createEmptyRow(colspan) {

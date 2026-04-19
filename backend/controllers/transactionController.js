@@ -68,7 +68,7 @@ async function getTransactions(req, res, next) {
 
 async function getTransactionStats(_req, res, next) {
   try {
-    const transactions = await Transaction.find({}, { sort: { createdAt: 1 } });
+    const transactions = await Transaction.find({}, { sort: { createdAt: -1 } });
 
     const totalTransactions = transactions.length;
     const fraudDetected = transactions.filter((transaction) => transaction.prediction).length;
@@ -78,8 +78,8 @@ async function getTransactionStats(_req, res, next) {
       : 0;
 
     const chartData = {
-      labels: transactions.slice(-10).map((transaction) => new Date(transaction.createdAt).toLocaleTimeString()),
-      values: transactions.slice(-10).map((transaction) => transaction.probability)
+      labels: transactions.slice(0, 10).map((transaction) => new Date(transaction.createdAt).toLocaleTimeString()),
+      values: transactions.slice(0, 10).map((transaction) => transaction.probability)
     };
 
     return res.json({
